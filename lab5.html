@@ -1,0 +1,92 @@
+ <html>
+  <head>
+  </head>
+  <body>
+    <script type="application/javascript">
+		//Inicio del programa creación de un const para poder escribir el nombre del emisor
+		const Name = prompt ("Ingrese su nombre:", "Laurelinda");
+		const time = new Date().toJSON().slice(0,10).replace(/-/g,'-');
+		
+		//Color al fondo
+		document.body.style.backgroundColor = '#F4D03F'
+		const listaDeMensajes = document.createElement('u1')
+		document.body.append(listaDeMensajes)
+		
+		//Funcion que contiene diversos parámetros
+		function mensajeDespliegue () {
+		fetch('http://ubeje.xyz:3000/messages').then((r) => {
+        return r.json()
+        }).then((j) => {
+			j.forEach((mensaje) => {
+				const unMensaje = document.createElement('li')
+				const emisor = document.createElement('h1')
+				const contenido = document.createElement('h2')
+				//Características del emisor y su mensaje
+				//Características del mensaje
+				emisor.append(mensaje.sender)
+				emisor.append('')
+				emisor.append(mensaje.date)
+				emisor.style.color = 'black'
+				emisor.style.fontWeight = 'blue'
+				emisor.style.fontFamily = 'Arial'
+				contenido.append(mensaje.message)
+				unMensaje.append(emisor)
+				unMensaje.style.color = 'black'
+				unMensaje.style.fontFamily = 'Arial'
+				unMensaje.append(contenido)
+				listaDeMensajes.append(unMensaje)
+				
+          });
+      }) 
+}
+		mensajeDespliegue()
+
+		const messageBox = document.createElement('input')
+		messageBox.style.width = '400px'
+		messageBox.style.height = '50px'
+		messageBox.style.border = '3px solid black'
+		document.body.append(messageBox)
+		//Creación del botón send para enviar el mensaje
+		const button = document.createElement('button')
+		button.style.width = '80px'
+		button.style.height = '40px'
+		button.style.border = '3px solid black '
+		button.append('send')
+		document.body.append(button)
+		//Funcion para no pasarse de los 140 caracteres
+		function limit(element) {
+			const max_chars = 140;
+			if (element.value.length > max_chars) {
+
+	}
+}      
+		//Enviar mensaje cuando presione 'enter'
+        messageBox.addEventListener('keydown', (event) => {
+			if (event.key === 'Enter' &&messageBox.value != ""){
+			 fetch('http://ubeje.xyz:3000/messages', { 
+		method: 'POST',
+                headers: {
+                   'Content-Type': 'application/json'
+                },
+				body: JSON.stringify({
+					sender: Name,
+					message: messageBox.value,
+					date: time,
+					hour: time
+				})
+				})
+				
+				//Limpiar lista de mensajes
+				.then((m)=> {
+					listaDeMensajes.innerHTML = ''
+					mensajeDespliegue()
+				})
+					
+				messageBox.value = ""
+				
+			
+			}
+	})
+    </script>
+  </body>
+</html>
